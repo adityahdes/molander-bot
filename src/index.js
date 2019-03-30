@@ -17,7 +17,7 @@ const server = http.createServer(function(req, res) {
 
     router.dispatch(req, res, function(err) {
         res.writeHead(err.status, {
-            "Content-Type": "text/plain"
+            'Content-Type': 'text/plain'
         });
         res.end(err.message);
     });
@@ -28,5 +28,5 @@ server.listen(port);
 
 function ping() {
     this.res.writeHead(200);
-    this.res.end("Hey, I'm molander-bot.");
+    this.res.end('Hey, I\'m molander-bot.');
 }

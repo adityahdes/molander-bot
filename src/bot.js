@@ -16,16 +16,16 @@ function respond() {
             postMessage(req, res, id, message);
         });
     } else {
-        console.log("Message ignored");
+        console.log('Message ignored');
         this.res.writeHead(200);
         this.res.end();
     }
 }
 
 async function respondTo(text, post) {
-    const bots = [{ name: "/molander", id: process.env.BOT_ID },
-                  { name: "@molander-bot", id: process.env.BOT_ID },
-                  { name: "/test", id: process.env.TEST_BOT_ID }];
+    const bots = [{ name: '/molander', id: process.env.BOT_ID },
+                  { name: '@molander-bot', id: process.env.BOT_ID },
+                  { name: '/test', id: process.env.TEST_BOT_ID }];
 
     for (const bot of bots) {
         if (text.startsWith(bot.name)) {
@@ -42,14 +42,14 @@ async function parseCommand(text) {
             return command.processCommand(text);
         }
     }
-    console.log("Unrecognized command issued: " + text);
+    console.log('Unrecognized command issued: ' + text);
 }
 
 function makeBody(botID, message) {
     if (typeof message === 'string') {
         return {
-            "bot_id": botID,
-            "text": message
+            'bot_id': botID,
+            'text': message
         };
     } else {
         message.bot_id = botID;

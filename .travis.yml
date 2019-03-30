@@ -9,11 +9,11 @@ stages:
 
 jobs:
   include:
-    - name: "Unit Tests"
+    - name: "Verify"
       stage: test
       install:
         - npm install
-      script: npm run test
+      script: npm run verify
 
     - name: "Heroku Deployment"
       stage: deploy

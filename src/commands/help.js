@@ -1,6 +1,6 @@
 const commandRegex = /^help/;
 
-function processCommand(command) {
+function processCommand() {
     return { text: 'I\'ll help out eventually' };
 }
 

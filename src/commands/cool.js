@@ -2,7 +2,7 @@ import cool from 'cool-ascii-faces';
 
 const commandRegex = /^\s*$/;
 
-function processCommand(command) {
+function processCommand() {
     return cool();
 }
 

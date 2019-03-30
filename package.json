@@ -25,11 +25,14 @@
     "babel-build": "mkdir dist && babel src -s -d dist",
     "build": "npm run clean && npm run babel-build",
     "test": "mocha --require babel-register --require babel-polyfill",
+    "verify": "eslint . --ext .js --ignore-pattern dist/** && npm run test",
     "prod": "npm run build && node bin/prod"
   },
   "version": "0.0.1",
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.12.4",
     "mocha": "^5.2.0",
     "sinon": "^7.2.3",
     "sinon-chai": "^3.3.0"

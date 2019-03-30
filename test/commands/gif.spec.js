@@ -6,7 +6,7 @@ import gif from '../../src/commands/gif';
 
 let sandbox;
 let chance;
-let expectedApiKey
+let expectedApiKey;
 
 before(() => {
     sandbox = createSandbox();
