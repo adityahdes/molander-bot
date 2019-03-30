@@ -1,12 +1,13 @@
 const axios = require('axios');
 
 const commandRegex = /.*/;
+const gifPrefixRegex = /^gif\s+/;
 
 const getRandomElement = (array) => array[Math.floor(Math.random() * array.length)];
 
 async function processCommand(command) {
     let message;
-    if (command.matches(/^gif\s+/)) {
+    if (gifPrefixRegex.test(command)) {
         message = command.substring('gif'.length).trim();
     } else {
         message = command;
