@@ -1,9 +1,7 @@
-const axios = require('axios');
+import axios from 'axios';
 
 const commandRegex = /.*/;
 const gifPrefixRegex = /^gif\s+/;
-
-const getRandomElement = (array) => array[Math.floor(Math.random() * array.length)];
 
 async function processCommand(command) {
     let message;
@@ -13,8 +11,6 @@ async function processCommand(command) {
         message = command;
     }
     const api_key = process.env.GIPHY_API_KEY;
-
-    const opts = { json: true };
 
     try {
         const response =
@@ -27,7 +23,7 @@ async function processCommand(command) {
     }
 }
 
-module.exports = {
+export default {
 	commandRegex,
 	processCommand
 };

@@ -4,7 +4,7 @@ function processCommand(command) {
     return { text: 'I\'ll help out eventually' };
 }
 
-module.exports = {
+export default {
 	commandRegex,
 	processCommand
 };

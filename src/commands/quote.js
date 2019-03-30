@@ -126,7 +126,7 @@ function processCommand(command) {
   return quotes[Math.floor(Math.random() * quotes.length)];
 }
 
-module.exports = {
+export default {
 	commandRegex,
 	processCommand
 };

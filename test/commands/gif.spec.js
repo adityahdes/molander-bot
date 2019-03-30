@@ -1,18 +1,15 @@
-const assert = require('assert');
-const chai = require('chai');
-const sinon = require('sinon');
-const expect = chai.expect;
-const sinonChai = require('sinon-chai');
-const Chance = require('chance');
-const axios = require('axios');
-const gif = require('../../src/commands/gif');
+import { expect } from 'chai';
+import { createSandbox } from 'sinon';
+import Chance from 'chance';
+import axios from 'axios';
+import gif from '../../src/commands/gif';
 
 let sandbox;
 let chance;
 let expectedApiKey
 
 before(() => {
-    sandbox = sinon.createSandbox();
+    sandbox = createSandbox();
     chance = new Chance();
 });
 
