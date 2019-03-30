@@ -1,23 +1,18 @@
-const bot = require('../src/bot');
-const assert = require('assert');
-const chai = require('chai');
-const sinon = require('sinon');
-const expect = chai.expect;
-const sinonChai = require('sinon-chai');
-
-chai.use(sinonChai);
-
-const cool = require('../src/commands/cool');
-const help = require('../src/commands/help');
-const infidels = require('../src/commands/deus-vult');
-const gif = require('../src/commands/gif');
-const quote = require('../src/commands/quote');
+import assert from 'assert';
+import sinon from 'sinon';
+import cool from '../src/commands/cool';
+import help from '../src/commands/help';
+import infidels from '../src/commands/deus-vult';
+import gif from '../src/commands/gif';
+import bot from '../src/bot';
+import quote from '../src/commands/quote';
 
 function messagePrintable(message) {
     return JSON.stringify(message, null, 4);
 }
 
 let sandbox;
+let expectedMessage;
 
 describe('bot test suite', () => {
     before(() => {
@@ -108,6 +103,8 @@ describe('bot test suite', () => {
     });
 
     context('/test bot', () => {
+        let expectedId;
+        
         beforeEach(() => {
             expectedId = 'TEST_BOT_ID';
             process.env.TEST_BOT_ID = expectedId;

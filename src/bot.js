@@ -1,7 +1,6 @@
-const HTTPS = require('https');
-const sleep = require('sleep');
-
-const commands = require('./commands');
+import HTTPS from 'https';
+import sleep from 'sleep';
+import commands from './commands';
 
 function respond() {
     const request = JSON.parse(this.req.chunks[0]);
@@ -92,7 +91,7 @@ function postMessage(request, response, botID, botResponse) {
 }
 
 
-module.exports = {
+export default {
     respond,
     respondTo
 };

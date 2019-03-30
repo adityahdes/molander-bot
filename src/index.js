@@ -1,6 +1,6 @@
-const http = require('http');
-const director = require('director');
-const bot = require('./bot.js');
+import http from 'http';
+import director from 'director';
+import bot from './bot.js';
 
 const router = new director.http.Router({
     '/': {

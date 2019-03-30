@@ -1,11 +1,12 @@
-const cool = require('cool-ascii-faces');
+import cool from 'cool-ascii-faces';
+
 const commandRegex = /^\s*$/;
 
 function processCommand(command) {
     return cool();
 }
 
-module.exports = {
+export default {
 	commandRegex,
 	processCommand
 };

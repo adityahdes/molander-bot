@@ -15,7 +15,7 @@ function processCommand(command) {
     };
 }
 
-module.exports = {
+export default {
 	commandRegex,
 	processCommand
 };
