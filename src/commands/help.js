@@ -1,7 +1,7 @@
 const commandRegex = /^help/;
 
-function processCommand() {
-    return { text: 'I\'ll help out eventually' };
+function processCommand () {
+	return { text: 'I\'ll help out eventually' };
 }
 
 export default {

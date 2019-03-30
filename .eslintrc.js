@@ -5,10 +5,8 @@ module.exports = {
         "es6": true,
         "mocha": true,
     },
-    "extends": "eslint:recommended",
+    "extends": "standard",
     "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly",
         "process": "writable"
     },
     "parserOptions": {
@@ -22,10 +20,9 @@ module.exports = {
         "react"
     ],
     "rules" : {
-        "no-unused-vars" : 2,
-        "no-undef" : 2,
+        "indent": ["error", "tab"],
         "semi": ["error", "always"],
-        "quotes": ["error", "single"],
+        "no-tabs": "off",
         "no-console": "off"
-    },
+    }
 };
