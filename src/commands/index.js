@@ -4,12 +4,10 @@ import cool from './cool';
 import quote from './quote';
 import gif from './gif';
 
-export default {
-	commands: [
-		help,
-		deusVult,
-		cool,
-		quote,
-		gif
-	]
-};
+export default [
+	help,
+	deusVult,
+	cool,
+	quote,
+	gif
+];

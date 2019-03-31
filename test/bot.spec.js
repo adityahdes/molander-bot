@@ -1,178 +1,107 @@
-import { expect } from 'chai';
 import sinon from 'sinon';
-import cool from '../src/commands/cool';
-import help from '../src/commands/help';
-import infidels from '../src/commands/deus-vult';
-import gif from '../src/commands/gif';
-import bot from '../src/bot';
+import proxyquire from 'proxyquire';
+import Chance from 'chance';
 
 let sandbox;
-let expectedMessage;
+let chance;
+let bot;
+let expectedBot;
+let expectedBotId;
+let commands;
+let shipperStub;
+let expectedRequest;
+let expectedResponse;
+let processCommandStub;
+let sleepStub;
 
 describe('bot test suite', () => {
 	before(() => {
 		sandbox = sinon.createSandbox();
+		chance = new Chance();
+	});
+
+	beforeEach(() => {
+		processCommandStub = sandbox.stub();
+		shipperStub = {
+			postMessage: sandbox.stub()
+		};
+		sleepStub = {
+			sleep: sandbox.stub()
+		};
+		sandbox.stub(console, 'log');
+		commands = [{
+			commandRegex: /testPrefix/,
+			processCommand: processCommandStub
+		}];
+		bot = proxyquire('../src/bot', {
+			'./commands': commands,
+			'./message-shipper': shipperStub,
+			'sleep': sleepStub
+		});
 	});
 
 	afterEach(() => {
 		sandbox.restore();
 	});
 
-	context('/molander bot', () => {
-		let expectedId;
+	context('when responding to a message', () => {
+		context('when prompted with a known command', () => {
+			let expectedCommand;
+			let expectedCommandText;
+			let expectedMessageResponse;
 
-		beforeEach(() => {
-			expectedId = 'BOT_ID';
-			process.env.BOT_ID = expectedId;
-		});
-
-		context('base command', () => {
-			beforeEach(() => {
-				expectedMessage = 'some face';
-				sandbox.stub(cool, 'processCommand').returns(expectedMessage);
-			});
-
-			it('should respond to the base command', async () => {
-				await bot.respondTo('/molander', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
+			beforeEach(async () => {
+				expectedMessageResponse = chance.string();
+				expectedBot = '/molander';
+				expectedBotId = chance.string();
+				process.env.BOT_ID = expectedBotId;
+				expectedCommand = 'testPrefix';
+				expectedCommandText = chance.string();
+				expectedRequest = {
+					chunks: [JSON.stringify({
+						text: expectedBot + expectedCommand + expectedCommandText
+					})]
+				};
+				expectedResponse = {
+					writeHead: sandbox.stub(),
+					end: sandbox.stub()
+				};
+				processCommandStub.resolves(expectedMessageResponse);
+				bot = proxyquire('../src/bot', {
+					'./commands': commands,
+					'./message-shipper': shipperStub,
+					'sleep': sleepStub
 				});
-			});
-		});
-
-		context('help command', () => {
-			beforeEach(() => {
-				expectedMessage = 'help message';
-				sandbox.stub(help, 'processCommand').returns(expectedMessage);
+				bot.req = expectedRequest;
+				bot.res = expectedResponse;
+				bot.commands = commands;
+				await bot.respond();
 			});
 
-			it('should respond to the help command', async () => {
-				await bot.respondTo('/molander help', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
-			});
-		});
-
-		context('infidels command', () => {
-			beforeEach(() => {
-				expectedMessage = 'infidel message';
-				sandbox.stub(infidels, 'processCommand').returns(expectedMessage);
-			});
-
-			it('should respond to the infidels command', async () => {
-				await bot.respondTo('/molander infidels!', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
-			});
-		});
-
-		context('gif command', () => {
-			beforeEach(() => {
-				expectedMessage = 'https://local:test.com/gif';
-				sandbox.stub(gif, 'processCommand').returns(expectedMessage);
-			});
-
-			it('should respond to the gif command', async () => {
-				await bot.respondTo('/molander gif', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
-			});
-
-			it('should respond to the gif command with a tag', async () => {
-				await bot.respondTo('/molander gif cat', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
-			});
-
-			it('should be default', async () => {
-				await bot.respondTo('/molander cat', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
+			it('should process the command with the correct handler', async () => {
+				sinon.assert.calledWith(shipperStub.postMessage, expectedResponse, expectedBotId, expectedMessageResponse);
 			});
 		});
 	});
 
-	context('/test bot', () => {
-		let expectedId;
-
-		beforeEach(() => {
-			expectedId = 'TEST_BOT_ID';
-			process.env.TEST_BOT_ID = expectedId;
+	context('when given a request without text', () => {
+		beforeEach(async () => {
+			expectedRequest = {
+				chunks: [JSON.stringify({})]
+			};
+			expectedResponse = {
+				writeHead: sandbox.stub(),
+				end: sandbox.stub()
+			};
+			bot.req = expectedRequest;
+			bot.res = expectedResponse;
+			await bot.respond();
 		});
 
-		context('base command', () => {
-			beforeEach(() => {
-				expectedMessage = 'some face';
-				sandbox.stub(cool, 'processCommand').returns(expectedMessage);
-			});
-
-			it('should respond to the base command', () => {
-				bot.respondTo('/test', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
-			});
-		});
-
-		context('help command', () => {
-			beforeEach(() => {
-				expectedMessage = 'help message';
-				sandbox.stub(help, 'processCommand').returns(expectedMessage);
-			});
-
-			it('should respond to the help command', () => {
-				bot.respondTo('/test help', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
-			});
-		});
-
-		context('infidels command', () => {
-			beforeEach(() => {
-				expectedMessage = 'infidel message';
-				sandbox.stub(infidels, 'processCommand').returns(expectedMessage);
-			});
-
-			it('should respond to the infidels command', async () => {
-				await bot.respondTo('/test infidels!', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
-			});
-		});
-
-		context('gif command', () => {
-			beforeEach(() => {
-				expectedMessage = 'https://local:test.com/gif';
-				sandbox.stub(gif, 'processCommand').returns(expectedMessage);
-			});
-
-			it('should respond to the gif command', async () => {
-				await bot.respondTo('/test gif', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
-			});
-
-			it('should respond to the gif command with a tag', async () => {
-				await bot.respondTo('/test gif cat', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
-			});
-
-			it('should be default', async () => {
-				await bot.respondTo('/test cat', function (id, message) {
-					expect(id).to.equal(expectedId);
-					expect(message).to.equal(expectedMessage);
-				});
-			});
+		it('should ignore the message', () => {
+			sinon.assert.calledWith(console.log, 'Message ignored');
+			sinon.assert.calledWith(expectedResponse.writeHead, 200);
+			sinon.assert.calledOnce(expectedResponse.end);
 		});
 	});
 });

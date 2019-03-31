@@ -17,7 +17,7 @@ async function processCommand (command) {
 
 		return response.data.data.images.fixed_height.url;
 	} catch (e) {
-		console.log('Error fetching gif:', e);
+		console.log(`Error fetching gif: ${JSON.stringify(e)}`);
 	}
 }
 

@@ -3,6 +3,7 @@
     "@babel/polyfill": "^7.4.0",
     "axios": "^0.18.0",
     "babel-cli": "^6.26.0",
+    "babel-plugin-add-module-exports": "^1.0.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
@@ -22,10 +23,11 @@
   "scripts": {
     "start": "node bin/dev",
     "clean": "rm -rf dist",
+    "coverage": "nyc -x src/bot.js -x **/*.spec.js --check-coverage --lines 100 --functions 100 --branches 100 --reporter=text --reporter=lcov npm run test",
     "babel-build": "mkdir dist && babel src -s -d dist",
     "build": "npm run clean && npm run babel-build",
     "test": "mocha --require babel-register --require babel-polyfill",
-    "verify": "eslint . --ext .js --ignore-pattern dist/** && npm run test",
+    "verify": "eslint . --ext .js --ignore-pattern dist/** && npm run test && npm run coverage",
     "prod": "npm run build && node bin/prod"
   },
   "version": "0.0.1",
@@ -39,6 +41,8 @@
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-standard": "^4.0.0",
     "mocha": "^5.2.0",
+    "nyc": "^13.3.0",
+    "proxyquire": "^2.1.0",
     "sinon": "^7.2.3",
     "sinon-chai": "^3.3.0"
   }

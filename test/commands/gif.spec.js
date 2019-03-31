@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { createSandbox } from 'sinon';
+import sinon, { createSandbox } from 'sinon';
 import Chance from 'chance';
 import axios from 'axios';
 import gif from '../../src/commands/gif';
@@ -77,6 +77,29 @@ describe('gif command', () => {
 			const result = await gif.processCommand(expectedCommand);
 
 			expect(result).to.equal(expectedGifResult);
+		});
+	});
+
+	context('when Giphy errors out', () => {
+		let expectedGiphyError;
+		let logSpy;
+
+		beforeEach(() => {
+			expectedGiphyError = { error: chance.string() };
+			expectedCommand = chance.string();
+			expectedGiphyEndpoint = `https://api.giphy.com/v1/gifs/translate?api_key=${expectedApiKey}&s=${expectedCommand}`;
+
+			sandbox.stub(axios, 'get')
+				.withArgs(expectedGiphyEndpoint)
+				.rejects(expectedGiphyError);
+
+			logSpy = sandbox.stub(console, 'log');
+		});
+
+		it('should log the error', async () => {
+			await gif.processCommand(expectedCommand);
+
+			sinon.assert.calledWith(logSpy, `Error fetching gif: ${JSON.stringify(expectedGiphyError)}`);
 		});
 	});
 });
